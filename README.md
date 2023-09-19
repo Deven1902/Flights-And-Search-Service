@@ -41,4 +41,3 @@ and then execute
 
 `npx sequelize db:migrate`
 ```
-}
