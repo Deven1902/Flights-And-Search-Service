@@ -1,10 +1,14 @@
-const city = require('../models/city');
+const { Op } = require('sequelize');
+
 const { City } = require('../models/index');
 
 class CityRepository {
-    async createCity({ name }) {
+
+    async createCity({ name }) { 
         try {
-            const city = await City.create({ name });
+            const city = await City.create({
+                name
+            });
             return city;
         } catch (error) {
             console.log("Something went wrong in the repository layer");
@@ -26,22 +30,20 @@ class CityRepository {
         }
     }
 
-    async updateCity(cityId,data){
+    async updateCity(cityId, data) { // {name: "Prayagraj"}
         try {
             // The below approach also works but will not return updated object
             // if we are using Pg then returning: true can be used, else not
-            
-            // const city=await City.update(data,{
-            //     where:{
-            //         id:cityId
-            //     }
+            // const city = await City.update(data, {
+            //     where: {
+            //         id: cityId
+            //     },
+            //      
             // });
-
             // for getting updated data in mysql we use the below approach
             const city = await City.findByPk(cityId);
             city.name = data.name;
             await city.save();
-            
             return city;
         } catch (error) {
             console.log("Something went wrong in the repository layer");
@@ -49,9 +51,9 @@ class CityRepository {
         }
     }
 
-    async getCity(cityId){
+    async getCity(cityId) {
         try {
-            const city=await City.findByPk(cityId);
+            const city = await City.findByPk(cityId);
             return city;
         } catch (error) {
             console.log("Something went wrong in the repository layer");
@@ -59,7 +61,7 @@ class CityRepository {
         }
     }
 
-    async getAllCities(filter) { // filter can be empty as well. 
+    async getAllCities(filter) { // filter can be empty also
         try {
             if(filter.name) {
                 const cities = await City.findAll({
@@ -73,7 +75,6 @@ class CityRepository {
             }
             const cities = await City.findAll();
             return cities;
-            
         } catch (error) {
             console.log("Something went wrong in the repository layer");
             throw {error};
